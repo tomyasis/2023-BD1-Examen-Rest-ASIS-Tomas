@@ -59,10 +59,12 @@ class Punto1Serializer(serializers.Serializer):
    nombre = serializers.CharField()
    birthdate = serializers.DateTimeField()
 
-class Filtro4Serializer(serializers.Serializer):
-   id = serializers.IntegerField()
-   apellido = serializers.CharField()
-   nombre = serializers.CharField()
-   birthdate = serializers.DateTimeField()
-   country = serializers.CharField()
-   newCountry = serializers.CharField()
+class PuntoN1Serializer(serializers.Serializer):
+   productid = serializers.IntegerField()
+   productname = serializers.CharField()
+   supplier = serializers.IntegerField()
+   category = serializers.IntegerField()
+   stockmin = serializers.IntegerField()
+
+'''class PruebaSerializer(serializers.Serializer):
+   id = '''

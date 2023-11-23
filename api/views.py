@@ -28,8 +28,8 @@ def getRoutes(request):
 @api_view(["GET", "POST"])
 def getAllCustomers(request):
     if request.method == "GET":
-        customers = Customers.objects.all()
-        #customers = Customers.objects.filter(contactname__startswith = 'M').order_by('contacttitle')[:3]
+        #customers = Customers.objects.all()
+        customers = Customers.objects.filter(contactname__startswith = 'M').order_by('contacttitle')[:3]
         #customers = Customers.objects.filter(contacttitle = 'Owner')[3:6]
         customersSerializers = CustomerSerializer(customers, many=True)
         return Response(customersSerializers.data, status=status.HTTP_200_OK)
@@ -138,8 +138,8 @@ def getCategoryById(request, pk):
 @api_view(["GET", "POST"])
 def getAllProducts(request):
     if request.method == "GET":
-        products = Products.objects.all()         
-        #products = Products.objects.filter(categoryid__categoryname__startswith = 'C')   
+        #products = Products.objects.all()         
+        products = Products.objects.filter(categoryid__categoryname__startswith = 'C')   
         #products = Products.objects.filter(supplierid__companyname__startswith = 'F')[:2]
         productSerializers = ProductSerializer(products, many=True)
         return Response(productSerializers.data, status=status.HTTP_200_OK)
@@ -323,7 +323,7 @@ def getOrderByDate(request):
     return Response(serializados.data, status=status.HTTP_200_OK)
 
 #
-@api_view(['GET'])
+'''@api_view(['GET'])
 def punto1(request):
     letra = request.query_params.get("letter")
     year = request.query_params.get("year")
@@ -340,10 +340,10 @@ def punto1(request):
         if e.birthdate.year >= int(year):
             resultados.append(resultado)
     serializados = Punto1Serializer(resultados, many=True)
-    return Response(serializados.data)
+    return Response(serializados.data)'''
 
 
-@api_view(["GET", 'UPDATE'])
+'''@api_view(["GET", 'UPDATE'])
 def filtro4(request):
     letra = request.query_params.get("letter")
     year = request.query_params.get("year")
@@ -365,7 +365,100 @@ def filtro4(request):
             e.save()
 
     serializados = Filtro4Serializer(resultados, many=True)
+    return Response(serializados.data)'''
+
+
+@api_view(["GET"])
+def puntoN1(request):
+    proveedor = request.query_params.get("Suppliers")
+    category = request.query_params.get("categoryid")
+    stockmin = request.query_params.get("stockmin")
+
+    ProductsFiltrados = Products.objects.filter(Suppliers = proveedor, categoryid = category)
+    
+    ProductsFiltrados = []
+
+    for i in ProductsFiltrados:
+        stockFuturo = i.suma()
+        if stockFuturo <= int(stockmin):  #& i.discontinued != str(1)
+            ProductsFiltrados.append(i)
+    
+    resultados = []
+    for e in ProductsFiltrados:
+        resultado = {
+            "productid" : e.productid,
+            "productname" : e.productname,
+            "supplier": e.supplierid,
+            "category" : e.categoryid,
+            "stockmin" : (e.unitsinstock + e.unitsonorder),
+        }
+        resultados.append(resultado)
+
+
+    serializados = PuntoN1Serializer(resultados, many=True)
+    print(serializados)
     return Response(serializados.data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''@api_view(['GET'])
+def prueba(request, pk):
+    try:
+        Suppliers = Suppliers.objects.get(Suppliers_id=pk)
+    except Exception:
+        return Response(status=status.HTTP_204_NO_CONTENT)'''
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
